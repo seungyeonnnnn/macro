@@ -1,52 +1,18 @@
-# import keyboard
-# import time
+import pyautogui
+import time
 
-# time.sleep(5)
-# # keyboard.press_and_release('ctrl+alt+d')
-# for i in range(10):
-#     time.sleep(1)
-#     keyboard.press_and_release('3')
+# 타이핑할 문자열
+text_to_type = "안녕하세요, 파이썬으로 타이핑 중입니다.adsfadsfasdf"
 
-# import pyperclip
+# 포커스를 타이핑 대상으로 이동 (예: 텍스트 편집기)
+# 이 부분은 타겟 애플리케이션 및 운영 체제에 따라 다를 수 있습니다.
+# 만약 다른 애플리케이션에 타이핑하려면 해당 애플리케이션으로 포커스를 전환해야 합니다.
 
-# text_to_copy = "이것은 클립보드에 복사된 텍스트입니다."
-# pyperclip.copy(text_to_copy)
+# 문자열을 타이핑
+pyautogui.typewrite(text_to_type, interval=0.3)  # 각 키 사이의 간격을 조절할 수 있음
 
-# text_pasted = pyperclip.paste()
-# print("클립보드에서 가져온 텍스트:", text_pasted)
+# 작업이 완료될 때까지 잠시 기다릴 수 있습니다.
+time.sleep(2)  # 2초 동안 대기
 
-from PIL import Image
-import pyperclip
-
-# 이미지 파일 경로
-image_path = "C:\\Users\\SEUNGYEON\\Desktop\\Clipboard01.png"
-image_path = "C:/Users/SEUNGYEON/Desktop/macro/temp_clipboard_image.png"
-
-# 이미지를 클립보드에 복사
-def copy_image_to_clipboard(image_path):
-    try:
-        image = Image.open(image_path)
-        image.save("temp_clipboard_image.png")  # 일시적으로 이미지를 저장
-        pyperclip.copy("temp_clipboard_image.png")  # 클립보드에 이미지 파일 경로 복사
-        print(f"이미지를 클립보드에 복사했습니다.")
-    except Exception as e:
-        print(f"이미지를 클립보드에 복사하는 중 오류 발생: {str(e)}")
-
-# 클립보드에 복사한 이미지 붙여넣기
-def paste_image_from_clipboard():
-    try:
-        image_path = pyperclip.paste()  # 클립보드에서 이미지 파일 경로 가져오기
-        if image_path.endswith(".png"):
-            image = Image.open(image_path)
-            image.show()  # 이미지를 뷰어로 열기
-            print(f"클립보드에서 이미지를 붙여넣었습니다.")
-        else:
-            print("클립보드에 있는 내용이 이미지 파일이 아닙니다.")
-    except Exception as e:
-        print(f"클립보드에서 이미지를 붙여넣는 중 오류 발생: {str(e)}")
-
-# 이미지를 클립보드에 복사
-copy_image_to_clipboard(image_path)
-
-# 클립보드에 복사한 이미지 붙여넣기
-paste_image_from_clipboard()
+# 필요에 따라 화면 스크린샷을 찍거나 다른 동작을 수행할 수 있습니다.
+,   .adsfadsfasdf

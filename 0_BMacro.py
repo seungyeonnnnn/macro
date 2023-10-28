@@ -6,14 +6,17 @@ from tkinter import *
 from tkinter import filedialog
 from PIL import Image, ImageTk  # 이미지 파일을 불러오기 위한 PIL 라이브러리
 import keyboard
+import pyautogui
 
 KEY = "1234"
 EXPIRE_Y = 2023
 EXPIRE_M = 11
 
+text_to_type = "abcdefg"
+
 root = Tk()
 root.title("B Macro")
-root.geometry("640x640")
+root.geometry("640x480")
 
 def create_new_file():
     msgbox.showinfo("Information", "Not Available")
@@ -23,38 +26,6 @@ def about_menu():
 
 def about_expire():
     msgbox.showinfo("About Expire", "만료일\n{}년 {}월 까지".format(EXPIRE_Y, EXPIRE_M))
-
-def sel_img_file():
-    global img_label
-    file = filedialog.askopenfile(title="파일 선택", filetypes=[("이미지 파일", "*.png;*.jpg;*jpeg;*gif;*bmp")])
-    if file:
-        image_path = file.name
-        file.close()
-
-        # 파일 경로 출력
-        label3.config(text=f"사진 경로 : {image_path}")
-
-        # 선택한 이미지를 불러와서 표시
-        image = Image.open(image_path)
-        image = image.resize((160, 160))  # 160x160 크기로 리사이즈
-        photo = ImageTk.PhotoImage(image)
-
-        # 이미지를 라벨에 표시
-        img_label = Label(img_frame)
-        img_label.config(image=photo)
-        img_label.image = photo
-        img_label.pack()
-
-        #버튼 비활성화
-        btn_sel_path.config(state="disabled")
-
-def del_img_file():
-    label3.config(text="사진 경로 : ")
-    try:
-        img_label.destroy()
-    except:
-        pass
-    btn_sel_path.config(state="normal")
 
 def exe_check():
     current_datetime = datetime.datetime.now()
@@ -70,7 +41,32 @@ def exe_cancel():
     label5.config(text="중지되었습니다.")
 
 def kakao_macro():
-    label5.config(text="실행되었습니다.")
+    label5.config(text="5초 후 실행 됩니다.")
+    root.update()
+    time.sleep(1)
+    label5.config(text="4초 후 실행 됩니다.")
+    root.update()
+    time.sleep(1)
+    label5.config(text="3초 후 실행 됩니다.")
+    root.update()
+    time.sleep(1)
+    label5.config(text="2초 후 실행 됩니다.")
+    root.update()
+    time.sleep(1)
+    label5.config(text="1초 후 실행 됩니다.")
+    root.update()
+    time.sleep(1)
+    label5.config(text="☆ 실행 중입니다 ☆")
+    root.update()
+    # while(True):
+    keyboard.press_and_release('Enter')
+    time.sleep(0.2)
+    pyautogui.typewrite(text_to_type, interval=0.1)
+    time.sleep(0.2)
+    keyboard.press_and_release('Enter')
+    time.sleep(0.2)
+    keyboard.press_and_release('ESC')
+    exe_cancel()
 
 key_frame = LabelFrame(root, text="키 코드")
 key_frame.pack(side="top", anchor="center", fill="both", expand=True, padx=5, pady=5)
@@ -78,7 +74,7 @@ key_frame.pack(side="top", anchor="center", fill="both", expand=True, padx=5, pa
 msg_frame = LabelFrame(root, text="보낼 메세지")
 msg_frame.pack(side="top", anchor="center", fill="both", expand=True, padx=5, pady=5)
 
-img_frame = LabelFrame(root, text="사진도 보내려면 경로를 선택해 주세요. 없으면 보내지 않습니다.")
+img_frame = LabelFrame(root, text="사진도 보내려면 아래를 확인해주세요.")
 img_frame.pack(side="top", fill="both", expand=True, padx=5, pady=5)
 
 exe_frame = LabelFrame(root, text="실행")
@@ -98,19 +94,17 @@ txt1 = Text(msg_frame, width=50, height=6)
 txt1.pack()
 txt1.insert(END, "놀러오세요.\n이벤트 중입니다.🎉")
 
-# label2 = Label(img_frame, text="사진도 보내려면 경로를 선택해 주세요.")
-# label2.pack(side="top")
+chk_var_img = IntVar()
+chk_box_img = Checkbutton(img_frame, text="사진도 보내기", variable=chk_var_img)
+chk_box_img.pack()
 
-btn_sel_path = Button(img_frame, width=10, padx=5, pady=5, text="경로 선택", command=sel_img_file)
-btn_sel_path.pack()
+help_msg = Label(img_frame, text="※ 사진을 보내려면 보내려는 사진을 클립보드에 복사해주세요.\n\"Ctrl+v\"시 사진이 붙어져야합니다.")
+help_msg.pack()
 
-btn_del_path = Button(img_frame, width=10, padx=5, pady=5, text="선택 취소", command=del_img_file)
-btn_del_path.pack()
-
-label3 = Label(img_frame, text="사진 경로 : ")
-label3.pack()
-
-# img_label = Label(img_frame)
+chk_var_img_after = IntVar()
+chk_var_img_after.set(1)
+chk_box_img_after = Checkbutton(img_frame, text="사진을 먼저 보내기(체크 해제 시 메세지를 먼저 보냅니다.)", variable=chk_var_img_after, onvalue=1)
+chk_box_img_after.pack()
 
 label4 = Label(exe_frame, text="친구 리스트 첫 번째에 포커스를 두고 실행을 눌러주세요.\n5초 후 작동 시작합니다.")
 label4.pack()
