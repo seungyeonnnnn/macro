@@ -1,62 +1,52 @@
-import tkinter as tk
-from tkinter import filedialog
-from PIL import Image, ImageTk
-import os  # 이미지 파일 삭제를 위한 os 모듈
+# import keyboard
+# import time
 
-def open_image_file():
-    # 파일 대화 상자를 열어서 이미지 파일 선택
-    file = filedialog.askopenfile(title="이미지 파일 선택", filetypes=[("이미지 파일", "*.png;*.jpg")])
+# time.sleep(5)
+# # keyboard.press_and_release('ctrl+alt+d')
+# for i in range(10):
+#     time.sleep(1)
+#     keyboard.press_and_release('3')
 
-    # 사용자가 이미지 파일을 선택하고 확인을 누르면
-    if file:
-        global image_path
-        image_path = file.name
-        file.close()
+# import pyperclip
 
-        # 파일 경로 출력
-        file_path_label.config(text=f"선택한 파일 경로: {image_path}")
+# text_to_copy = "이것은 클립보드에 복사된 텍스트입니다."
+# pyperclip.copy(text_to_copy)
 
-        # 선택한 이미지를 불러와서 160x160 픽셀 크기로 리사이즈
+# text_pasted = pyperclip.paste()
+# print("클립보드에서 가져온 텍스트:", text_pasted)
+
+from PIL import Image
+import pyperclip
+
+# 이미지 파일 경로
+image_path = "C:\\Users\\SEUNGYEON\\Desktop\\Clipboard01.png"
+image_path = "C:/Users/SEUNGYEON/Desktop/macro/temp_clipboard_image.png"
+
+# 이미지를 클립보드에 복사
+def copy_image_to_clipboard(image_path):
+    try:
         image = Image.open(image_path)
-        image = image.resize((160, 160))
-        photo = ImageTk.PhotoImage(image)
+        image.save("temp_clipboard_image.png")  # 일시적으로 이미지를 저장
+        pyperclip.copy("temp_clipboard_image.png")  # 클립보드에 이미지 파일 경로 복사
+        print(f"이미지를 클립보드에 복사했습니다.")
+    except Exception as e:
+        print(f"이미지를 클립보드에 복사하는 중 오류 발생: {str(e)}")
 
-        # 이미지를 라벨에 표시
-        image_label.config(image=photo)
-        image_label.image = photo
-        image_label.pack()
+# 클립보드에 복사한 이미지 붙여넣기
+def paste_image_from_clipboard():
+    try:
+        image_path = pyperclip.paste()  # 클립보드에서 이미지 파일 경로 가져오기
+        if image_path.endswith(".png"):
+            image = Image.open(image_path)
+            image.show()  # 이미지를 뷰어로 열기
+            print(f"클립보드에서 이미지를 붙여넣었습니다.")
+        else:
+            print("클립보드에 있는 내용이 이미지 파일이 아닙니다.")
+    except Exception as e:
+        print(f"클립보드에서 이미지를 붙여넣는 중 오류 발생: {str(e)}")
 
-def delete_image():
-    global image_path
-    if image_path:
-        # 이미지 파일 삭제
-        # os.remove(image_path)
-        # 이미지 라벨 초기화
-        image_label.config(image=None)
-        # 파일 경로 초기화
-        file_path_label.config(text="선택한 파일 경로: ")
+# 이미지를 클립보드에 복사
+copy_image_to_clipboard(image_path)
 
-# GUI 창을 생성
-root = tk.Tk()
-root.title("이미지 파일 선택")
-
-# "이미지 열기" 버튼을 생성
-open_button = tk.Button(root, text="이미지 열기", command=open_image_file)
-open_button.pack()
-
-# "경로 삭제" 버튼을 생성
-delete_button = tk.Button(root, text="경로 삭제", command=delete_image)
-delete_button.pack()
-
-# 이미지를 표시할 라벨 생성
-image_label = tk.Label(root)
-
-# 파일 경로 출력 라벨 생성
-file_path_label = tk.Label(root, text="선택한 파일 경로: ")
-file_path_label.pack()
-
-# 초기 이미지 경로를 None으로 설정
-image_path = None
-
-# GUI 루프 시작
-root.mainloop()
+# 클립보드에 복사한 이미지 붙여넣기
+paste_image_from_clipboard()

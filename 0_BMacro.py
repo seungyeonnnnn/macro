@@ -1,18 +1,28 @@
+import time
+import datetime
 import tkinter.ttk as ttk
 import tkinter.messagebox as msgbox
 from tkinter import *
 from tkinter import filedialog
 from PIL import Image, ImageTk  # 이미지 파일을 불러오기 위한 PIL 라이브러리
+import keyboard
+
+KEY = "1234"
+EXPIRE_Y = 2023
+EXPIRE_M = 11
 
 root = Tk()
 root.title("B Macro")
 root.geometry("640x640")
 
 def create_new_file():
-    msgbox.showinfo("Information", "ㅈ같네 ㅅㅂ")
+    msgbox.showinfo("Information", "Not Available")
 
 def about_menu():
-    msgbox.showinfo("Information", "B Macro v0.0\nContact : fkdltldls@naver.com")
+    msgbox.showinfo("Information", "B Macro v0.A\nContact : fkdltldls@naver.com")
+
+def about_expire():
+    msgbox.showinfo("About Expire", "만료일\n{}년 {}월 까지".format(EXPIRE_Y, EXPIRE_M))
 
 def sel_img_file():
     global img_label
@@ -35,10 +45,35 @@ def sel_img_file():
         img_label.image = photo
         img_label.pack()
 
+        #버튼 비활성화
+        btn_sel_path.config(state="disabled")
 
 def del_img_file():
-    label3.config(text="사진 경로")
-    img_label.destroy()
+    label3.config(text="사진 경로 : ")
+    try:
+        img_label.destroy()
+    except:
+        pass
+    btn_sel_path.config(state="normal")
+
+def exe_check():
+    current_datetime = datetime.datetime.now()
+    if (current_datetime.year <= EXPIRE_Y) & (current_datetime.month <= EXPIRE_M):
+        if KEY == keycode.get():
+            kakao_macro()
+        else:
+            label5.config(text="키 코드가 일치하지 않아 실행되지 않습니다.")
+    else:
+        label5.config(text="사용 기간이 만료되어 실행되지 않습니다.")
+
+def exe_cancel():
+    label5.config(text="중지되었습니다.")
+
+def kakao_macro():
+    label5.config(text="실행되었습니다.")
+
+key_frame = LabelFrame(root, text="키 코드")
+key_frame.pack(side="top", anchor="center", fill="both", expand=True, padx=5, pady=5)
 
 msg_frame = LabelFrame(root, text="보낼 메세지")
 msg_frame.pack(side="top", anchor="center", fill="both", expand=True, padx=5, pady=5)
@@ -54,6 +89,10 @@ exe_frame.pack(side="top", fill="both", expand=True, padx=5, pady=5)
 
 # label1 = Label(msg_frame, text="보낼 메세지")
 # label1.pack()
+
+keycode = Entry(key_frame, width=50)
+keycode.pack()
+keycode.insert(END, "1234")
 
 txt1 = Text(msg_frame, width=50, height=6)
 txt1.pack()
@@ -76,13 +115,13 @@ label3.pack()
 label4 = Label(exe_frame, text="친구 리스트 첫 번째에 포커스를 두고 실행을 눌러주세요.\n5초 후 작동 시작합니다.")
 label4.pack()
 
-btn_exe = Button(exe_frame, width=10, padx=5, pady=5, text="실행")
+btn_exe = Button(exe_frame, width=10, padx=5, pady=5, text="실행", command=exe_check)
 btn_exe.pack()
 
-btn_cancel = Button(exe_frame, width=10, padx=5, pady=5, text="중지")
+btn_cancel = Button(exe_frame, width=10, padx=5, pady=5, text="중지", command=exe_cancel)
 btn_cancel.pack()
 
-label5 = Label(exe_frame, text="실행 중입니다.")
+label5 = Label(exe_frame)
 label5.pack()
 
 menu = Menu(root)
@@ -101,6 +140,7 @@ menu.add_cascade(label="File", menu=menu_file)
 
 menu_view = Menu(menu, tearoff=0)
 menu_view.add_checkbutton(label="About Macro", command=about_menu)
+menu_view.add_checkbutton(label="About Expire", command=about_expire)
 menu.add_cascade(label="Info", menu=menu_view)
 
 root.config(menu=menu)
